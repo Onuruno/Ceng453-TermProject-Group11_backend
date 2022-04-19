@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.group11.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.*;
 
 @Controller
 @SpringBootApplication
-public class DemoApplication {
+public class ServerApplication {
 
     @RequestMapping("/")
     @ResponseBody
@@ -16,6 +16,6 @@ public class DemoApplication {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(ServerApplication.class, args);
     }
 }
