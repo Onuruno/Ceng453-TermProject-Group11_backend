@@ -40,4 +40,10 @@ public class Player {
      */
     @ApiModelProperty(notes = "Player's password")
     private String password;
+
+    /**
+     * Player's email
+     */
+    @ApiModelProperty(notes = "Player's password")
+    private String email;
 }
