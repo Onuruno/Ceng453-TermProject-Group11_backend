@@ -59,6 +59,7 @@ public interface GameRepository extends JpaRepository<Game, Long> {
      * @param pageable is the parameter for paging query.
      * @return the list of games sorted by score and endTime in descending manner
      */
+
     @Query("SELECT Game.username, Game.startTime, Game.endTime, Game.score" +
             " FROM Game " +
             "WHERE Game.startTime >= :startDate AND Game.endTime < :endDate " +
