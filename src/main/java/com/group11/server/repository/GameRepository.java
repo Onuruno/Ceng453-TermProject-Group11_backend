@@ -51,7 +51,6 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     List<Object[]> findAllByStartTimeBefore(@Param("date") LocalDateTime date,
                                             Pageable pageable);
 
-    /* This is for getting every game between given dates startDate and endDate */
     /**
      * This method is a query to get all the games between two given dates
      * in the Game table including start date and excluding the end date
@@ -68,7 +67,13 @@ public interface GameRepository extends JpaRepository<Game, Long> {
                                                            @Param("endDate") LocalDateTime endDate,
                                                            Pageable pageable);
 
-    /* This is for getting every game belong to a given user by userName */
+    /**
+     * This method is a query to get all the games for a given userName
+     * in the Game table
+     * @param userName is the parameter for the username
+     * @param pageable is the parameter for paging query.
+     * @return the list of games sorted by score and endTime in descending manner
+     */
     @Query("SELECT Game.username, Game.startTime, Game.endTime, Game.score " +
             "FROM Game " +
             "WHERE Game.username = :userName " +
