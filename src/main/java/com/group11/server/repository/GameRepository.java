@@ -16,9 +16,9 @@ public interface GameRepository extends JpaRepository<Game, Long> {
      * @param pageable is the parameter for paging query.
      * @return the list of games sorted by score and endTime in descending manner
      */
-    @Query("SELECT Game.id, Game.username, Game.score, Game.activity, Game.startTime, Game.endTime " +
+    @Query(value = "SELECT Game.id, Game.username, Game.score, Game.activity, Game.startTime, Game.endTime " +
             "FROM Game " +
-            " ORDER BY score DESC, endTime DESC")
+            " ORDER BY score DESC, endTime DESC", nativeQuery = true)
     List<Object[]> findAllGame(Pageable pageable);
 
     /**
@@ -28,10 +28,10 @@ public interface GameRepository extends JpaRepository<Game, Long> {
      * @param pageable is the parameter for paging query.
      * @return the list of games sorted by score and endTime in descending manner
      */
-    @Query("SELECT Game.id, Game.username, Game.score, Game.activity, Game.startTime, Game.endTime " +
+    @Query(value = "SELECT Game.id, Game.username, Game.score, Game.activity, Game.startTime, Game.endTime " +
             " FROM Game " +
             "WHERE Game.startTime >= :date" +
-            " ORDER BY score DESC, endTime DESC")
+            " ORDER BY score DESC, endTime DESC", nativeQuery = true)
     List<Object[]> findAllByStartTimeAfter(@Param("date") LocalDateTime date,
                                            Pageable pageable);
 
@@ -42,10 +42,10 @@ public interface GameRepository extends JpaRepository<Game, Long> {
      * @param pageable is the parameter for paging query.
      * @return the list of games sorted by score and endTime in descending manner
      */
-    @Query("SELECT Game.id, Game.username, Game.score, Game.activity, Game.startTime, Game.endTime " +
+    @Query(value = "SELECT Game.id, Game.username, Game.score, Game.activity, Game.startTime, Game.endTime " +
             " FROM Game " +
             "WHERE Game.endTime < :date" +
-            " ORDER BY score DESC, endTime DESC")
+            " ORDER BY score DESC, endTime DESC", nativeQuery = true)
     List<Object[]> findAllByStartTimeBefore(@Param("date") LocalDateTime date,
                                             Pageable pageable);
 
@@ -73,10 +73,10 @@ public interface GameRepository extends JpaRepository<Game, Long> {
      * @param pageable is the parameter for paging query.
      * @return the list of games sorted by score and endTime in descending manner
      */
-    @Query("SELECT Game.id, Game.username, Game.score, Game.activity, Game.startTime, Game.endTime " +
+    @Query(value = "SELECT Game.id, Game.username, Game.score, Game.activity, Game.startTime, Game.endTime " +
             "FROM Game " +
             "WHERE Game.username = :userName " +
-            "ORDER BY score DESC, endTime DESC")
+            "ORDER BY score DESC, endTime DESC", nativeQuery = true)
     List<Object[]> findAllByUsername(@Param("userName") String userName,
                                      Pageable pageable);
 
