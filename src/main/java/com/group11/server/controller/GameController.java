@@ -1,10 +1,12 @@
 package com.group11.server.controller;
 
 import com.group11.server.model.Game;
+import com.group11.server.model.Player;
 import com.group11.server.service.GameService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,22 +38,6 @@ public class GameController {
     }
 
     /**
-     * This method maps GET Request to /leaderboard
-     *
-     * @param pageLimit Size of the returning list. Should be positive int
-     * @return A list of games ordered by Score
-     */
-    @GetMapping("/leaderboard")
-    @ApiOperation(value = "Gets highest N(pageLimit) all scores from the database",
-            notes = "Provide page limit for receiving that number of elements in returning list",
-            response = Game.class,
-            responseContainer = "List")
-    public List<Game> getAllGames(@ApiParam(value = "Page limit for receiving that number of elements in returning list. Should be positive int")
-                                  @RequestParam(value = "pageLimit") int pageLimit) {
-        return gameService.getAllGames(pageLimit);
-    }
-
-    /**
      * This method maps GET Request to /leaderboard_weekly
      *
      * @param pageLimit Size of the returning list. Should be positive int
@@ -62,7 +48,7 @@ public class GameController {
             notes = "Provide page limit for receiving that number of elements in returning list",
             response = Game.class,
             responseContainer = "List")
-    public List<Game> getWeeklyRecords(@ApiParam(value = "Page limit for receiving that number of elements in returning list. Should be positive int")
+    public List<Pair<Player, Integer>> getWeeklyRecords(@ApiParam(value = "Page limit for receiving that number of elements in returning list. Should be positive int")
                                        @RequestParam(value = "pageLimit") int pageLimit) {
         return gameService.getWeeklyGameRecordList(pageLimit);
     }
@@ -78,7 +64,7 @@ public class GameController {
             notes = "Provide page limit for receiving that number of elements in returning list",
             response = Game.class,
             responseContainer = "List")
-    public List<Game> getMonthlyRecords(@ApiParam(value = "Page limit for receiving that number of elements in returning list. Should be positive int")
+    public List<Pair<Player, Integer>> getMonthlyRecords(@ApiParam(value = "Page limit for receiving that number of elements in returning list. Should be positive int")
                                         @RequestParam(value = "pageLimit") int pageLimit) {
         return gameService.getMonthlyGameRecordList(pageLimit);
     }
