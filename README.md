@@ -2,4 +2,4 @@
 
 
 
-SwaggerDocumentation: http://127.0.0.1:8080/swagger-ui/#/
+SwaggerDocumentation: https://ceng453-term-project-group11.herokuapp.com/swagger-ui/#/
