@@ -95,7 +95,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     /**
      * This method creates a new AuthenticationManager bean.
-     * This is added here because the Bean of this manageer cannot be created without declaring.
+     * This is added here because the Bean of this manager cannot be created without declaring.
      *
      * @return A new AuthenticationManager instance
      * @throws Exception *

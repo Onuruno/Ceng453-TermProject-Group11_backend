@@ -2,6 +2,7 @@ package com.group11.server.controller;
 
 import com.group11.server.model.Player;
 import com.group11.server.service.PlayerService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin
 @RequestMapping("/api")
+@Api(value = "Player REST Endpoints", description = "Contains endpoints to interact with the Players in API")
 public class PlayerController {
 
     private final PlayerService playerService;
+
+    @GetMapping("/")
+    public String index() {
+        return "Spring Boot POC Welcomes You!";
+    }
 
     /**
      * This method maps POST request to /login.
