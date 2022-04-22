@@ -20,11 +20,6 @@ public class PlayerController {
 
     private final PlayerService playerService;
 
-    @GetMapping("/")
-    public String index() {
-        return "Spring Boot POC Welcomes You!";
-    }
-
     /**
      * This method maps POST request to /login.
      *
