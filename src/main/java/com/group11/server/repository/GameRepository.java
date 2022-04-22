@@ -80,4 +80,32 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     List<Object[]> findAllByUsername(@Param("userName") String userName,
                                      Pageable pageable);
 
+    /**
+     * This method is a query to get all the players and their scores
+     * in the games that played in last 7 days.s
+     * @param pageable is the parameter for paging query.
+     * @return list of players with their overall scores
+     */
+    @Query(value = "SELECT p.*, SUM(g.score) as sum_score " +
+            "FROM Game g, Player p " +
+            "WHERE g.endTime < SYSDATE() " +
+            "AND g.endTime > SYSDATE()-7 " +
+            "AND g.username = p.username " +
+            "GROUP BY g.username", nativeQuery = true)
+    List<Object[]> findLeaderboardWeekly(Pageable pageable);
+
+    /**
+     * This method is a query to get all the players and their scores
+     * in the games that played in last 7 days.s
+     * @param pageable is the parameter for paging query.
+     * @return list of players with their overall scores
+     */
+    @Query(value = "SELECT p.username, SUM(g.score) as sum_score " +
+            "FROM Game g, Player p " +
+            "WHERE g.endTime < SYSDATE() " +
+            "AND g.endTime > SYSDATE()-30 " +
+            "AND g.username = p.username " +
+            "GROUP BY g.username", nativeQuery = true)
+    List<Object[]> findLeaderboardMonthly(Pageable pageable);
+
 }

@@ -6,10 +6,10 @@ import com.group11.server.repository.GameRepository;
 import com.group11.server.repository.PlayerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,30 +43,15 @@ public class GameServiceImpl implements GameService {
     }
 
     /**
-     * This method gets all games from the database with decreasing score order.
-     *
-     * @param pageLimit Size of the returning list. Should be positive int
-     * @return A list of games
-     */
-    @Override
-    public List<Game> getAllGames(int pageLimit) {
-
-        return convertToGameList(gameRepository.findAllGame(PageRequest.of(0, pageLimit)));
-    }
-
-    /**
      * This method gets weekly games from the database ordered in decreasing order by Score with size of pageLimit.
      *
      * @param pageLimit Size of the returning list. Should be positive int
      * @return A list of games
      */
     @Override
-    public List<Game> getWeeklyGameRecordList(int pageLimit) {
+    public List<Pair<Player, Integer>> getWeeklyGameRecordList(int pageLimit) {
 
-        LocalDateTime oneWeek = LocalDateTime.now().minus(1, ChronoUnit.WEEKS);
-
-        return convertToGameList(gameRepository.findAllByStartTimeAfterAndEndTimeBefore(oneWeek,
-                LocalDateTime.now(), PageRequest.of(0, pageLimit)));
+        return convertToPlayerScorePairList(gameRepository.findLeaderboardWeekly(PageRequest.of(0, pageLimit)));
     }
 
     /**
@@ -76,34 +61,28 @@ public class GameServiceImpl implements GameService {
      * @return A list of games
      */
     @Override
-    public List<Game> getMonthlyGameRecordList(int pageLimit) {
+    public List<Pair<Player, Integer>> getMonthlyGameRecordList(int pageLimit) {
 
-        LocalDateTime oneMonth = LocalDateTime.now().minus(1, ChronoUnit.MONTHS);
-
-        return convertToGameList(gameRepository.findAllByStartTimeAfterAndEndTimeBefore(oneMonth,
-                LocalDateTime.now(), PageRequest.of(0, pageLimit)));
+        return convertToPlayerScorePairList(gameRepository.findLeaderboardMonthly(PageRequest.of(0, pageLimit)));
     }
 
     /**
-     * This method gets query results and transforms it into a list of games.
+     * This method gets query results and transforms it into a list of
+     * player and score pairs.
      *
      * @param queryResultList A list of objects that holds games
      * @return A list of games
      */
-    private List<Game> convertToGameList(List<Object[]> queryResultList) {
-        List<Game> gameList = new ArrayList<>();
+    private List<Pair<Player, Integer>> convertToPlayerScorePairList(List<Object[]> queryResultList) {
+        List<Pair<Player, Integer>> playerScoreList = new ArrayList<>();
 
         for (Object[] record : queryResultList) {
-            Game game = new Game();
-            game.setId((Long) record[0]);
-            game.setUsername((String) record[1]);
-            game.setScore((Integer) record[2]);
-            game.setActivity((Boolean) record[3]);
-            game.setStartTime((LocalDateTime) record[4]);
-            game.setEndTime((LocalDateTime) record[5]);
-            gameList.add(game);
+            Player player = new Player();
+            player.setUsername((String) record[0]);
+            Pair<Player, Integer> pair = Pair.of(player, (Integer) record[1]);
+            playerScoreList.add(pair);
         }
 
-        return gameList;
+        return playerScoreList;
     }
 }
