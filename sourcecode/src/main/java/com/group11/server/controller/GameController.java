@@ -1,5 +1,6 @@
 package com.group11.server.controller;
 
+import com.group11.server.dao.GameDao;
 import com.group11.server.model.Game;
 import com.group11.server.model.Player;
 import com.group11.server.service.GameService;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -48,7 +50,7 @@ public class GameController {
             notes = "Provide page limit for receiving that number of elements in returning list",
             response = Game.class,
             responseContainer = "List")
-    public List<Pair<Player, Integer>> getWeeklyRecords(@ApiParam(value = "Page limit for receiving that number of elements in returning list. Should be positive int")
+    public List<GameDao> getWeeklyRecords(@ApiParam(value = "Page limit for receiving that number of elements in returning list. Should be positive int")
                                        @RequestParam(value = "pageLimit") int pageLimit) {
         return gameService.getWeeklyGameRecordList(pageLimit);
     }
@@ -64,7 +66,7 @@ public class GameController {
             notes = "Provide page limit for receiving that number of elements in returning list",
             response = Game.class,
             responseContainer = "List")
-    public List<Pair<Player, Integer>> getMonthlyRecords(@ApiParam(value = "Page limit for receiving that number of elements in returning list. Should be positive int")
+    public List<GameDao> getMonthlyRecords(@ApiParam(value = "Page limit for receiving that number of elements in returning list. Should be positive int")
                                         @RequestParam(value = "pageLimit") int pageLimit) {
         return gameService.getMonthlyGameRecordList(pageLimit);
     }

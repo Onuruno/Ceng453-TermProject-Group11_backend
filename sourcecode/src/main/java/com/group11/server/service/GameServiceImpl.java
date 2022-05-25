@@ -1,5 +1,6 @@
 package com.group11.server.service;
 
+import com.group11.server.dao.GameDao;
 import com.group11.server.model.Game;
 import com.group11.server.model.Player;
 import com.group11.server.repository.GameRepository;
@@ -9,7 +10,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.math.BigDecimal.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +41,7 @@ public class GameServiceImpl implements GameService {
         Game game = new Game();
         game.setUsername(player.getUsername());
         game.setScore(score);
-        game.setEndTime(LocalDateTime.now());
+        game.setEndTime(LocalDate.now());
         gameRepository.save(game);
     }
 
@@ -49,9 +52,9 @@ public class GameServiceImpl implements GameService {
      * @return A list of games
      */
     @Override
-    public List<Pair<Player, Integer>> getWeeklyGameRecordList(int pageLimit) {
+    public List<GameDao> getWeeklyGameRecordList(int pageLimit) {
 
-        return convertToPlayerScorePairList(gameRepository.findLeaderboardWeekly(PageRequest.of(0, pageLimit)));
+        return convertToUsernameScorePairList(gameRepository.findLeaderboardWeekly(PageRequest.of(0, pageLimit)));
     }
 
     /**
@@ -61,9 +64,9 @@ public class GameServiceImpl implements GameService {
      * @return A list of games
      */
     @Override
-    public List<Pair<Player, Integer>> getMonthlyGameRecordList(int pageLimit) {
+    public List<GameDao> getMonthlyGameRecordList(int pageLimit) {
 
-        return convertToPlayerScorePairList(gameRepository.findLeaderboardMonthly(PageRequest.of(0, pageLimit)));
+        return convertToUsernameScorePairList(gameRepository.findLeaderboardMonthly(PageRequest.of(0, pageLimit)));
     }
 
     /**
@@ -71,16 +74,16 @@ public class GameServiceImpl implements GameService {
      * player and score pairs.
      *
      * @param queryResultList A list of objects that holds games
-     * @return A list of games
+     * @return A list of username score pairs
      */
-    private List<Pair<Player, Integer>> convertToPlayerScorePairList(List<Object[]> queryResultList) {
-        List<Pair<Player, Integer>> playerScoreList = new ArrayList<>();
+    private List<GameDao> convertToUsernameScorePairList(List<Object[]> queryResultList) {
+        List<GameDao> playerScoreList = new ArrayList<>();
 
         for (Object[] record : queryResultList) {
-            Player player = new Player();
-            player.setUsername((String) record[0]);
-            Pair<Player, Integer> pair = Pair.of(player, (Integer) record[1]);
-            playerScoreList.add(pair);
+            GameDao gameDao = new GameDao();
+            gameDao.setUsername((String) record[0]);
+            gameDao.setScore(((BigDecimal) record[1]).intValue());
+            playerScoreList.add(gameDao);
         }
 
         return playerScoreList;

@@ -44,6 +44,9 @@ public class PlayerServiceImpl implements PlayerService {
             if (optPlayer.isEmpty()) {
                 return ResponseEntity.status(403).body("Incorrect username or password");
             }
+            if(!passwordEncoder.matches(requestPlayer.getPassword(), optPlayer.get().getPassword())) {
+                return ResponseEntity.status(403).body("Incorrect username or password");
+            }
             Player player = optPlayer.get();
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(403).body(e.toString());

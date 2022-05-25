@@ -10,7 +10,7 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -47,14 +47,8 @@ public class Game {
     private Boolean activity;
 
     /**
-     * The time that game started
-     */
-    @ApiModelProperty(notes = "Start time of the game")
-    private LocalDateTime startTime;
-
-    /**
      * The time that game ended
      */
     @ApiModelProperty(notes = "End time of the game")
-    private LocalDateTime endTime;
+    private LocalDate endTime;
 }
