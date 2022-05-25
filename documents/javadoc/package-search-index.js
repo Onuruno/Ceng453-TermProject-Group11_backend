@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.group11.server"},{"l":"com.group11.server.controller"},{"l":"com.group11.server.dao"},{"l":"com.group11.server.model"},{"l":"com.group11.server.repository"},{"l":"com.group11.server.service"},{"l":"com.group11.server.utils"}]

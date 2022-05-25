@@ -46,4 +46,11 @@ public class Player {
      */
     @ApiModelProperty(notes = "Player's password")
     private String email;
+
+
+    /**
+     * Player's reset password token
+     */
+    @ApiModelProperty(notes = "Player's reset password token")
+    private String resetPasswordToken;
 }

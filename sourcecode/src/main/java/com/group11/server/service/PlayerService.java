@@ -12,4 +12,7 @@ public interface PlayerService {
     Player getPlayer(Long Id) throws Exception;
     ResponseEntity<?> register(Player player);
     String updatePlayer(Player requestPlayer, Long Id);
+
+    void updateResetPasswordToken(String token, String username) throws Exception;
+    Player getByResetPasswordToken(String token) throws Exception;
 }

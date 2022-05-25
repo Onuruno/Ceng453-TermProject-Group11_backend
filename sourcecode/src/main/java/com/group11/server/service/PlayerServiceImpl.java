@@ -142,10 +142,35 @@ public class PlayerServiceImpl implements PlayerService {
             Player player = playerRepository.findById(Id).get();
 
             player.setPassword(passwordEncoder.encode(requestPlayer.getPassword()));
+            player.setResetPasswordToken(null);
             playerRepository.save(player);
+
             return "Player is updated successfully.";
         }
         return "Player is not found, please check the input fields and id.";
+    }
+
+    @Override
+    public void updateResetPasswordToken(String token, String username) throws Exception {
+        Optional<Player> player = playerRepository.findByUsername(username);
+        if  (player.isPresent()) {
+            player.get().setResetPasswordToken(token);
+            playerRepository.save(player.get());
+        }
+        else {
+            throw new Exception("Couldn't find a user by given username.");
+        }
+    }
+
+    @Override
+    public Player getByResetPasswordToken(String token) throws Exception {
+        Optional<Player> player = playerRepository.findByResetPasswordToken(token);
+        if (player.isPresent()) {
+            return player.get();
+        }
+        else {
+            throw new Exception("Couldn't get by the given token. ");
+        }
     }
 
 }

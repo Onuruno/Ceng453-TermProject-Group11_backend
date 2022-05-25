@@ -1,11 +1,13 @@
 package com.group11.server.controller;
 
 import com.group11.server.model.Player;
+import com.group11.server.repository.PlayerRepository;
 import com.group11.server.service.PlayerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -117,4 +119,25 @@ public class PlayerController {
                              @RequestParam(value = "id") Long Id) {
         return playerService.updatePlayer(player, Id);
     }
+
+    @PostMapping("/forgotpassword")
+    @ApiOperation(value = "Sends a reset link to the user",
+    notes = "Send an email that contains the reset link to the user.",
+    response =  String.class)
+    public String processResetPassword (@ApiParam(value = "mail of the given user")
+                                        @RequestParam(value = "mail") String mail,
+                                        @ApiParam(value = "username of the given user")
+                                        @RequestParam(value = "username") String username) {
+        try {
+            String token = RandomString.make(30);
+            playerService.updateResetPasswordToken(token, username);
+            //String resetPasswordLink = Utility.getSiteURL(request) + "/reset_password?token=" + token;
+            //sendEmail(email, resetPasswordLink);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return "forgot_password_form";
+    }
+
 }

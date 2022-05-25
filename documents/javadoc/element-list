@@ -1,0 +1,7 @@
+com.group11.server
+com.group11.server.controller
+com.group11.server.dao
+com.group11.server.model
+com.group11.server.repository
+com.group11.server.service
+com.group11.server.utils

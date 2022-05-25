@@ -15,4 +15,10 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
      * @return an Optional object that may or not hold Player which is checkable
      */
     Optional<Player> findByUsername(String username);
+
+    /**
+     * @param resetPasswordToken Unique 30 character long password reset token
+     * @return an Optional object that may or not hold Player which is checkable.
+     */
+    Optional<Player> findByResetPasswordToken(String resetPasswordToken);
 }
