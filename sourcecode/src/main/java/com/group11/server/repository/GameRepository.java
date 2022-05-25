@@ -110,4 +110,16 @@ public interface GameRepository extends JpaRepository<Game, Long> {
             "ORDER BY sum_score DESC", nativeQuery = true)
     List<Object[]> findLeaderboardMonthly(Pageable pageable);
 
+    /**
+     * This method is a query to get singular game by id and score
+     * @return the requested game
+     */
+    @Query(value = "SELECT p.username, g.score " +
+            "FROM game g, player p " +
+            "WHERE g.score = :score " +
+            "AND p.username = :userName", nativeQuery = true)
+    Game findGameByUsernameAndScore(@Param("score") Integer score,
+                                      @Param("userName") String userName
+                                      );
+
 }
