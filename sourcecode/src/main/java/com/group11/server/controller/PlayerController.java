@@ -9,9 +9,13 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.mail.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +25,7 @@ import java.util.List;
 public class PlayerController {
 
     private final PlayerService playerService;
+    private final PlayerRepository playerRepository;
 
     /**
      * This method maps POST request to /login.
@@ -124,20 +129,67 @@ public class PlayerController {
     @ApiOperation(value = "Sends a reset link to the user",
     notes = "Send an email that contains the reset link to the user.",
     response =  String.class)
-    public String processResetPassword (@ApiParam(value = "mail of the given user")
+    public String forgotPassword (@ApiParam(value = "mail of the given user")
                                         @RequestParam(value = "mail") String mail,
                                         @ApiParam(value = "username of the given user")
                                         @RequestParam(value = "username") String username) {
         try {
-            String token = RandomString.make(30);
-            playerService.updateResetPasswordToken(token, username);
-            //String resetPasswordLink = Utility.getSiteURL(request) + "/reset_password?token=" + token;
-            //sendEmail(email, resetPasswordLink);
+            Optional<Player> user = playerRepository.findByUsername(username);
+            if (user.isPresent()) {
+                if (user.get().getEmail().equals(username)) {
+                    String token = RandomString.make(30);
+                    playerService.updateResetPasswordToken(token, username);
+                    SimpleMailMessage message = new SimpleMailMessage();
+                    message.setTo(mail);
+                    message.setSubject("Your Password Reset Link");
+                    message.setFrom("testmail@gmail.com"); //ADD A PROPER EMAIL
+                    message.setText("In order to reset your password, please click the following link: "
+                            + "http://localhost:8080/resetPassword?token="+token);
 
+                    JavaMailSender javaMailSender = new JavaMailSenderImpl();
+                    javaMailSender.send(message);
+                }
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return "forgot_password_form";
+        return "forgotPassword";
     }
 
+    @GetMapping("/resetpassword")
+    @ApiOperation(value= "Checks the token of given users reset link.",
+    notes = "A token will be provided",
+    response = Boolean.class)
+    public Boolean resetPassword (@ApiParam(value = "Reset token of the user.")
+                                  @RequestParam(value="token") String token) {
+        Optional<Player> player = playerRepository.findByResetPasswordToken(token);
+        if (player.isPresent() ) {
+            return Boolean.TRUE;
+        }
+        else {
+            return Boolean.FALSE;
+        }
+    }
+
+    @PostMapping("/resetpassword")
+    @ApiOperation(value= "Update the password of given token's users password.",
+    notes = "A token and password will be provided.",
+    response = Boolean.class)
+    public Boolean updatePassword (@ApiParam(value = "Reset token of the user.")
+                                  @RequestParam(value="token") String token,
+                                   @ApiParam(value = "New password of the user")
+                                   @RequestParam(value="password") String password) {
+        try {
+            Player player = playerService.getByResetPasswordToken(token);
+            Long id = player.getId();
+            Player requestPlayer = new Player();
+            requestPlayer.setPassword(password);
+            playerService.updatePlayer(requestPlayer, id);
+
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return Boolean.TRUE;
+    }
 }
