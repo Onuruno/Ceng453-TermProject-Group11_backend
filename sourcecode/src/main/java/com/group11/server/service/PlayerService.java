@@ -15,4 +15,8 @@ public interface PlayerService {
 
     void updateResetPasswordToken(String token, String username) throws Exception;
     Player getByResetPasswordToken(String token) throws Exception;
+
+    ResponseEntity<?> forgotPassword(Player requestPlayer);
+
+    ResponseEntity<?> updatePassword(Player requestPlayer);
 }

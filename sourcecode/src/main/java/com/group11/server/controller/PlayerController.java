@@ -3,6 +3,7 @@ package com.group11.server.controller;
 import com.group11.server.model.Player;
 import com.group11.server.repository.PlayerRepository;
 import com.group11.server.service.PlayerService;
+import com.group11.server.service.PlayerServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -129,67 +130,18 @@ public class PlayerController {
     @ApiOperation(value = "Sends a reset link to the user",
     notes = "Send an email that contains the reset link to the user.",
     response =  String.class)
-    public String forgotPassword (@ApiParam(value = "mail of the given user")
-                                        @RequestParam(value = "mail") String mail,
-                                        @ApiParam(value = "username of the given user")
-                                        @RequestParam(value = "username") String username) {
-        try {
-            Optional<Player> user = playerRepository.findByUsername(username);
-            if (user.isPresent()) {
-                if (user.get().getEmail().equals(username)) {
-                    String token = RandomString.make(30);
-                    playerService.updateResetPasswordToken(token, username);
-                    SimpleMailMessage message = new SimpleMailMessage();
-                    message.setTo(mail);
-                    message.setSubject("Your Password Reset Link");
-                    message.setFrom("testmail@gmail.com"); //ADD A PROPER EMAIL
-                    message.setText("In order to reset your password, please click the following link: "
-                            + "http://localhost:8080/resetPassword?token="+token);
+    public ResponseEntity<?> forgotPassword (@ApiParam(value = "User information that will be used for forgot password action")
+                                      @RequestBody Player player) {
+        return playerService.forgotPassword(player);
 
-                    JavaMailSender javaMailSender = new JavaMailSenderImpl();
-                    javaMailSender.send(message);
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return "forgotPassword";
     }
 
-    @GetMapping("/resetpassword")
-    @ApiOperation(value= "Checks the token of given users reset link.",
-    notes = "A token will be provided",
-    response = Boolean.class)
-    public Boolean resetPassword (@ApiParam(value = "Reset token of the user.")
-                                  @RequestParam(value="token") String token) {
-        Optional<Player> player = playerRepository.findByResetPasswordToken(token);
-        if (player.isPresent() ) {
-            return Boolean.TRUE;
-        }
-        else {
-            return Boolean.FALSE;
-        }
-    }
 
     @PostMapping("/resetpassword")
-    @ApiOperation(value= "Update the password of given token's users password.",
-    notes = "A token and password will be provided.",
-    response = Boolean.class)
-    public Boolean updatePassword (@ApiParam(value = "Reset token of the user.")
-                                  @RequestParam(value="token") String token,
-                                   @ApiParam(value = "New password of the user")
-                                   @RequestParam(value="password") String password) {
-        try {
-            Player player = playerService.getByResetPasswordToken(token);
-            Long id = player.getId();
-            Player requestPlayer = new Player();
-            requestPlayer.setPassword(password);
-            playerService.updatePlayer(requestPlayer, id);
-
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return Boolean.TRUE;
+    @ApiOperation(value = "Update the password of given token's users password.",
+            notes = "A token and password will be provided.")
+    public ResponseEntity<?> updatePassword(@ApiParam(value = "User information that will be used for forgot password action")
+                                      @RequestBody Player player) {
+        return playerService.updatePassword(player);
     }
 }
