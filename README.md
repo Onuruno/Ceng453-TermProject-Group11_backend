@@ -2,4 +2,4 @@
 
 
 
-SwaggerDocumentation: https://ceng453-term-project-group11.herokuapp.com/swagger-ui/#/
+SwaggerDocumentation: https://ceng453-term-project-group11v2.herokuapp.com/swagger-ui/#/
